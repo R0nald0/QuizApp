@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="LinearLayoutCustom">
+        <item name="android:background">@color/verdeSecundaria</item>
+    </style>
+    <style name="CardViewLayout" parent="Widget.Material3.CardView.Elevated">
+
+    </style>
+</resources>

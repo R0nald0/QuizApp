@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="SplashScreen" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/teal_700</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/logo22</item>
+        <item name="windowSplashScreenAnimationDuration">200</item>
+        <item name="android:windowSplashScreenBrandingImage" tools:targetApi="s">@drawable/logo22</item>
+        <item name="postSplashScreenTheme">@style/Theme.QuizApp</item>
+    </style>
+    <style name="progresBarThemeCostomizado" parent="Widget.AppCompat.ProgressBar">
+         <item name="android:color">@color/black</item>
+
+    </style>
+</resources>

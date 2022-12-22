@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+   <style name="ImageCircular">
+         <item name="cornerSize">50%</item>
+   </style>
+    <style name="TextInputStyle" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
+        <item name="boxCornerRadiusBottomEnd">30dp</item>
+        <item name="boxCornerRadiusTopEnd">30dp</item>
+        <item name="boxCornerRadiusTopStart">30dp</item>
+        <item name="boxCornerRadiusBottomStart">30dp</item>
+        <item name="boxStrokeWidth">0dp</item>
+        <item name="boxStrokeWidthFocused">0dp</item>
+    </style>
+    <style name="CardStyleCustom" parent="Widget.MaterialComponents.CardView">
+        <item name="cardCornerRadius">30dp</item>
+
+
+    </style>
+
+
+
+</resources>
