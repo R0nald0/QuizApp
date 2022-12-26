@@ -1,2 +1,5 @@
 # QuizApp
-  Aplicativo desenvolvido ultilizando tecnologias do Firebase como FirebaseAuth,Firestore,FirebaseStorege
+
+### video  <https://www.linkedin.com/feed/update/urn:li:ugcPost:7013288136474550272/>
+ 
+Aplicativo desenvolvido ultilizando tecnologias do Firebase como FirebaseAuth,Firestore,FirebaseStorege
