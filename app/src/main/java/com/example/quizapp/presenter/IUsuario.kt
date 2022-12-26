@@ -1,5 +1,7 @@
 package com.example.quizapp.presenter
 
+import android.content.Intent
+import android.graphics.Bitmap
 import android.net.Uri
 import android.view.View
 import androidx.activity.result.ActivityResultLauncher
@@ -19,8 +21,10 @@ interface IUsuario{
             fun abrirView(usuario: Usuario)
             fun exibirToast(mensagem:String)
             fun carregarImagemPicasso(uri : Uri)
+            fun carregarBitMap(bitmap: Bitmap )
             fun requisistarPermissao()
             fun abrirGaleria(): ActivityResultLauncher<String>?
+            fun abrirCameraOnclik() :ActivityResultLauncher<Intent>?
             fun exibirProgressBar()
             fun esconderProgressBar()
             fun contratoGetContent()

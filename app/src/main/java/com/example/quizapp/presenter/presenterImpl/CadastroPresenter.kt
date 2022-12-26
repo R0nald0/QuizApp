@@ -1,6 +1,8 @@
 package com.example.quizapp.presenter.presenterImpl
 
+import android.Manifest
 import android.app.Activity
+import android.content.Context
 import android.net.Uri
 import android.util.Log
 import androidx.activity.result.ActivityResult
@@ -12,6 +14,7 @@ import com.example.quizapp.repository.IUsuarioBD
 import com.example.quizapp.repository.repoImpl.UsuarioRepository
 import com.example.quizapp.utils.Constantes
 import kotlinx.coroutines.*
+
 
 class CadastroPresenter (
     private var viewCadastro: IUsuario.IViewCadastro? = null,
@@ -45,7 +48,7 @@ class CadastroPresenter (
     }
 
     override
-      fun carregarImagemPerfil(uri: Uri?){
+      fun carregarImagemPerfil(uri: Uri?){ //TODO revisar imagem perfil
         usuarioBd?.recuperarUriImagen(uri)
           if (uri !=null){
               viewCadastro?.carregarImagemPicasso(uri)
@@ -54,31 +57,51 @@ class CadastroPresenter (
           }
     }
 
-    override
-      fun abrirGaleria(){
 
-    }
     override
-     fun verificarPermissao(permissao: Boolean) {
+     fun verificarPermissao(permissao: Map<String, Boolean>) {
+        val per = permissao.get(Manifest.permission.READ_EXTERNAL_STORAGE)
 
-     if (permissao ){
+        if (per == true){
          Log.i(Constantes.TAG, "verificarPermissao: ${permissao}")
          viewCadastro?.exibirToast("permissaoAceita")
-         usuarioBd?.abrirGaleria(viewCadastro?.abrirGaleria())
+               usuarioBd?.abrirGaleria(viewCadastro?.abrirGaleria())
           }else{
-
               viewCadastro?.exibirToast("permissaoNEgada")
           }
+
+        val perCamera = permissao.get(Manifest.permission.CAMERA)
+        if (perCamera == true){
+            Log.i(Constantes.TAG, "verificarPermissao: ${permissao}")
+            viewCadastro?.exibirToast("permissaoAceita")
+            usuarioBd?.abrirCamera(viewCadastro?.abrirCameraOnclik())
+        }else{
+            viewCadastro?.exibirToast("permissaoNEgada")
+        }
     }
     override
-     fun requisitarPermissao(gerenciadorDePermissoao :ActivityResultLauncher<String>, permissaoNome:String, activity: Activity){
+     fun requisitarPermissao(gerenciadorDePermissoao : ActivityResultLauncher<Array<String>>, permissaoNome:String, activity: Activity){
          val getPermissao =permissao.pedirPermissao(gerenciadorDePermissoao,permissaoNome,activity)
-          if (!getPermissao) usuarioBd?.abrirGaleria(viewCadastro?.abrirGaleria())
-            Log.i(Constantes.TAG, "pedirPermissao: ${getPermissao}")
+
+          if (!getPermissao) {
+              if (permissaoNome == Manifest.permission.READ_EXTERNAL_STORAGE){
+                  usuarioBd?.abrirGaleria(viewCadastro?.abrirGaleria())
+              }else{
+                  usuarioBd?.abrirCamera(viewCadastro?.abrirCameraOnclik())
+              }
+          }
+
       }
 
     override
-      fun adicionarFotoPorCamera(resultActivity : ActivityResult) {
-        usuarioBd?.adicionarFotoPorCamera(resultActivity)
+      fun adicionarFotoPorCamera(resultActivity : ActivityResult,context: Context) {
+             val uri = usuarioBd?.adicionarFotoPorCamera(resultActivity,context)
+
+        if (uri !=null ){
+            viewCadastro?.carregarImagemPicasso(uri)
+        }else{
+            viewCadastro?.exibirToast("Nenhuma foto foi tirada")
+        }
+
     }
 }

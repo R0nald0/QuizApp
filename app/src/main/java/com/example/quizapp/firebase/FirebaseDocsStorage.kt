@@ -19,6 +19,7 @@ object FirebaseDocsStorage  {
          .child("${usuario.id}")
          .child("fotoPerfil01")
          .putFile(Uri.parse(usuario.urlImagemPerfil)).await()
+
    }
     suspend fun dowloadImagem(usuario: Usuario):Uri {
          val uri= firebaseStorage.getReference("perfil")

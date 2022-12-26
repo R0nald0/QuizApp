@@ -2,10 +2,10 @@ package com.example.quizapp.view
 
 import android.Manifest
 import android.content.Intent
+import android.graphics.Bitmap
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
@@ -15,16 +15,15 @@ import com.example.quizapp.databinding.ActivityCadastroBinding
 import com.example.quizapp.model.Usuario
 import com.example.quizapp.presenter.IUsuario
 import com.example.quizapp.presenter.ICadastroPresenter
-import com.example.quizapp.utils.Constantes
 import com.squareup.picasso.Picasso
 
 class CadastroActivity : AppCompatActivity(),IUsuario.IViewCadastro{
     private val binding by lazy {
         ActivityCadastroBinding.inflate(layoutInflater)
     }
-     private  var abrirGaleria : ActivityResultLauncher<String>? = null
-     private  var  abrirCamera: ActivityResultLauncher<Intent>? = null
-      private lateinit var gerenciadorDePermissoao : ActivityResultLauncher<String>
+      private  var abrirGaleria : ActivityResultLauncher<String>? = null
+      private  var  abrirCamera: ActivityResultLauncher<Intent>? = null
+      private lateinit var gerenciadorDePermissoao :  ActivityResultLauncher<Array<String>>
 
       private lateinit var presenter: ICadastroPresenter
 
@@ -33,8 +32,9 @@ class CadastroActivity : AppCompatActivity(),IUsuario.IViewCadastro{
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
          presenter = CadastroPresenter(this)
+          requisistarPermissao()
           contratoGetContent()
-          contratoStartActivty()
+           contratoStartActivty()
 
 
         binding.imgBtnGaleria.setOnClickListener {
@@ -43,17 +43,16 @@ class CadastroActivity : AppCompatActivity(),IUsuario.IViewCadastro{
         }
 
           binding.imgBtnCamera.setOnClickListener{
-
-            /*
-              presenter.requisitarPermissao(gerenciadorDePermissoao,
-                  Manifest.permission.CAMERA,this)*/
+              presenter.requisitarPermissao(
+                  gerenciadorDePermissoao,
+                   Manifest.permission.CAMERA,this)
           }
 
     }
 
     override
     fun requisistarPermissao(){
-        gerenciadorDePermissoao  = registerForActivityResult(ActivityResultContracts.RequestPermission()){
+      gerenciadorDePermissoao  = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()){
               presenter.verificarPermissao(it)
             }
     }
@@ -81,12 +80,15 @@ class CadastroActivity : AppCompatActivity(),IUsuario.IViewCadastro{
         abrirGaleria = registerForActivityResult(ActivityResultContracts.GetContent()){
             presenter.carregarImagemPerfil(it)
         }
-        requisistarPermissao()
+    }
+
+    override fun abrirCameraOnclik():ActivityResultLauncher<Intent>?{
+       return abrirCamera
     }
 
     override fun contratoStartActivty() {
        abrirCamera = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
-              presenter.adicionarFotoPorCamera(it)
+            presenter.adicionarFotoPorCamera(it,this)
          }
     }
 
@@ -117,6 +119,10 @@ class CadastroActivity : AppCompatActivity(),IUsuario.IViewCadastro{
      fun carregarImagemPicasso(uri :Uri){
           Picasso.get().load(uri).into(binding.perfilImagem)
      }
+
+    override fun carregarBitMap(bitmap: Bitmap) {
+         binding.perfilImagem.setImageBitmap(bitmap)
+    }
 
 
 }

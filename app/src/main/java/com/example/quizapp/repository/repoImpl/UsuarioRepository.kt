@@ -1,11 +1,20 @@
 package com.example.quizapp.repository.repoImpl
 
 import android.Manifest
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
+import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
+import com.example.quizapp.BuildConfig
 import com.example.quizapp.firebase.AuthFirebase
 import com.example.quizapp.firebase.FirebaseDb
 import com.example.quizapp.firebase.FirebaseDocsStorage
@@ -14,6 +23,10 @@ import com.example.quizapp.repository.IUsuarioBD
 import com.example.quizapp.utils.Constantes
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.tasks.await
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileOutputStream
+import java.io.OutputStream
 
 
 class UsuarioRepository(): IUsuarioBD {
@@ -57,7 +70,7 @@ class UsuarioRepository(): IUsuarioBD {
     }
 
     override
-     suspend fun recuperarUsuarioLogado():Usuario {
+       suspend fun recuperarUsuarioLogado():Usuario {
       try {
                val user =  firebaseAuth.verificarUsuarioLogado()
                val doc =   db.recuperarUsuaarioLogado(user?.uid.toString())
@@ -80,14 +93,14 @@ class UsuarioRepository(): IUsuarioBD {
     }
 
     override
-     fun verificarUsuariologdao(): Boolean {
+       fun verificarUsuariologdao(): Boolean {
            val isAuth =firebaseAuth.verificarUsuarioLogadoBool()
            if (isAuth)return true
         return false
     }
 
     override
-     fun deslogarUsuario() {
+        fun deslogarUsuario() {
        auth.signOut()
     }
 
@@ -119,13 +132,13 @@ class UsuarioRepository(): IUsuarioBD {
     }
 
     override
-        suspend fun carregarImagemPerfil(usuario: Usuario):Uri {
+     suspend fun carregarImagemPerfil(usuario: Usuario):Uri {
         Log.i(Constantes.TAG, "Imagem uPerfil ${usuario.urlImagemPerfil}")
          return  storage.dowloadImagem(usuario)
     }
 
     override
-    fun abrirRecusroFoto(permissao :String){
+     fun abrirRecusroFoto(permissao :String){
         when(permissao){
             Manifest.permission.READ_EXTERNAL_STORAGE->{
                 Log.i(Constantes.TAG, "abrirRecusroFoto: galeria")
@@ -135,12 +148,33 @@ class UsuarioRepository(): IUsuarioBD {
             }
         }
     }
-
-    override fun adicionarFotoPorCamera(resultActivity: ActivityResult) {
-         if (resultActivity.data != null){
-
-         }
+    override
+        fun abrirCamera(abrirCamera: ActivityResultLauncher<Intent>? ){
+        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+         abrirCamera?.launch(intent)
     }
 
+    override
+      fun adicionarFotoPorCamera(resultActivity: ActivityResult,context: Context) : Uri? {
 
+        val bitmap = resultActivity.data?.extras?.get("data") as Bitmap
+        val caminho = File(context.cacheDir, "images")
+
+            try {
+                caminho.mkdirs()
+                val file = File(caminho,"image.jpg")
+                val output = FileOutputStream(file)
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, output)
+                output.flush()
+                output.close()
+                uriImage = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID+".provider", file)
+                Log.i(Constantes.TAG, "File--: ${file}")
+                Log.i(Constantes.TAG, "Uri-file: ${uriImage}")
+
+                return uriImage
+            } catch (ex: RuntimeException) {
+                throw RuntimeException("Erro : ${ex.message}-- ${ex.stackTrace}")
+            }
+
+    }
 }

@@ -38,18 +38,20 @@ class Permissao{
         }
     }
 
-    fun pedirPermissao(gerenciadorDePermissoao : ActivityResultLauncher<String>,permissao: String,activity: Activity):Boolean{
+    fun pedirPermissao(gerenciadorDePermissoao :  ActivityResultLauncher<Array<String>>,permissao: String,activity: Activity):Boolean{
 
         val valorPermissao = ContextCompat.checkSelfPermission(activity,permissao) == PackageManager.PERMISSION_DENIED
-              if (valorPermissao) listaPermissoesNegadas.add(permissao)
-        Log.i(Constantes.TAG, "pedirPermissao: ${listaPermissoesNegadas}")
-        if (listaPermissoesNegadas.contains(permissao) ) {
-                gerenciadorDePermissoao.launch(permissao)
+              if (valorPermissao && !listaPermissoesNegadas.contains(permissao)) listaPermissoesNegadas.add(permissao)
+        Log.i(Constantes.TAG, "Lista de permissões negadas: ${listaPermissoesNegadas}")
+        if (listaPermissoesNegadas.isNotEmpty() ) {
+             gerenciadorDePermissoao.launch(listaPermissoesNegadas.toTypedArray())
+              listaPermissoesNegadas.remove(permissao)
                 return true
         }else{
              return false
         }
 
     }
+
 
 }

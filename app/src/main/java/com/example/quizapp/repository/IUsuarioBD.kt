@@ -1,5 +1,8 @@
 package com.example.quizapp.repository
 
+import android.content.Context
+import android.content.Intent
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import androidx.activity.result.ActivityResult
@@ -17,7 +20,8 @@ interface IUsuarioBD {
      fun convertBundleToUsuario(bundle: Bundle?): Usuario?
      fun recuperarUriImagen(uri: Uri?)
      fun abrirGaleria(galeria : ActivityResultLauncher<String>? = null,)
+    fun abrirCamera(  abrirCamera: ActivityResultLauncher<Intent>? = null)
     suspend fun carregarImagemPerfil(usuario: Usuario):Uri
     fun abrirRecusroFoto( permissao :String)
-    fun adicionarFotoPorCamera(resultActivity : ActivityResult)
+    fun adicionarFotoPorCamera(resultActivity : ActivityResult,context: Context):Uri?
 }
