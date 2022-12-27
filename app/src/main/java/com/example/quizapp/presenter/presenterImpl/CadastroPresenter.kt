@@ -13,6 +13,7 @@ import com.example.quizapp.presenter.ICadastroPresenter
 import com.example.quizapp.repository.IUsuarioBD
 import com.example.quizapp.repository.repoImpl.UsuarioRepository
 import com.example.quizapp.utils.Constantes
+import com.example.quizapp.utils.RecursoFotos
 import kotlinx.coroutines.*
 
 
@@ -22,6 +23,7 @@ class CadastroPresenter (
        ) : ICadastroPresenter{
 
     private val  permissao = Permissao()
+    private val  recursoFotos = RecursoFotos()
 
      init {
          usuarioBd = UsuarioRepository()
@@ -66,7 +68,7 @@ class CadastroPresenter (
             Manifest.permission.CAMERA-> {
                 if (mapPermissao[permis] == true){
                     viewCadastro?.exibirToast("permissaoAceita")
-                    usuarioBd?.abrirCamera(viewCadastro?.abrirCameraOnclik())
+                    recursoFotos.abrirCamera(viewCadastro?.abrirCameraOnclik())
                 }
                 else viewCadastro?.exibirToast("Permissao Negada")
             }
@@ -75,7 +77,7 @@ class CadastroPresenter (
 
                 if (mapPermissao[permis] == true){
                     viewCadastro?.exibirToast("permissaoAceita")
-                    usuarioBd?.abrirGaleria(viewCadastro?.abrirGaleria())
+                    recursoFotos.abrirGaleria(viewCadastro?.abrirGaleria())
                 }
                 else viewCadastro?.exibirToast("permissao Negada")
 
@@ -89,9 +91,9 @@ class CadastroPresenter (
 
           if (!getPermissao) {
               if (permissaoNome == Manifest.permission.READ_EXTERNAL_STORAGE){
-                  usuarioBd?.abrirGaleria(viewCadastro?.abrirGaleria())
+                   recursoFotos.abrirGaleria(viewCadastro?.abrirGaleria())
               }else{
-                  usuarioBd?.abrirCamera(viewCadastro?.abrirCameraOnclik())
+                 recursoFotos.abrirCamera(viewCadastro?.abrirCameraOnclik())
               }
           }
 
@@ -99,7 +101,7 @@ class CadastroPresenter (
 
     override
       fun adicionarFotoPorCamera(resultActivity : ActivityResult,context: Context) {
-             val uri = usuarioBd?.adicionarFotoPorCamera(resultActivity,context)
+             val uri = recursoFotos.adicionarFotoPorCamera(resultActivity,context)
 
         if (uri !=null ){
             viewCadastro?.carregarImagemPicasso(uri)
