@@ -37,6 +37,7 @@ class UsuarioRepository(): IUsuarioBD {
     private var abrirGaleria : ActivityResultLauncher<String>? = null
     private  var uriImage : Uri? =null
 
+    // TODO Remover classe FirebaseAUTH.getInstance
 
      override
       suspend fun cadastrarUsuario(email: String, senha: String, nome:String):Usuario{
@@ -48,7 +49,6 @@ class UsuarioRepository(): IUsuarioBD {
                    "************",
                    uriImage.toString()
                )
-               Log.i(Constantes.TAG, "cadastrarUsuarioURlPEr:${uriImage} ")
                if (uriImage != null ) storage.salvarImagem(usuario)
                  db.salvarUsuario(usuario)
                  return usuario
@@ -64,7 +64,6 @@ class UsuarioRepository(): IUsuarioBD {
              firebaseAuth.logarUsurio(email,senha)
             return  true
         }catch (e:RuntimeException){
-            Log.i(Constantes.TAG, "logarUsuario: Erro ao logar Usuario ${e.message}")
             throw RuntimeException(e.message.toString())
         }
     }
@@ -121,10 +120,11 @@ class UsuarioRepository(): IUsuarioBD {
      override
      fun recuperarUriImagen(uri: Uri?){
           if(uri != null){
-              Log.i(Constantes.TAG, "recuperarUriImagen: ${uri}")
               uriImage = uri
            }
     }
+
+    //TODO Criar outra classe para metodos que não especificos da  classe usuário
      override
      fun abrirGaleria(galeria : ActivityResultLauncher<String>? ,){
               abrirGaleria = galeria
@@ -140,6 +140,7 @@ class UsuarioRepository(): IUsuarioBD {
     override
      fun abrirRecusroFoto(permissao :String){
         when(permissao){
+            //TODO Revisar Funcao
             Manifest.permission.READ_EXTERNAL_STORAGE->{
                 Log.i(Constantes.TAG, "abrirRecusroFoto: galeria")
             }
@@ -156,6 +157,7 @@ class UsuarioRepository(): IUsuarioBD {
 
     override
       fun adicionarFotoPorCamera(resultActivity: ActivityResult,context: Context) : Uri? {
+        //TODO Mudar Metodo de Local
 
         val bitmap = resultActivity.data?.extras?.get("data") as Bitmap
         val caminho = File(context.cacheDir, "images")

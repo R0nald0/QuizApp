@@ -21,7 +21,6 @@ interface IUsuario{
             fun abrirView(usuario: Usuario)
             fun exibirToast(mensagem:String)
             fun carregarImagemPicasso(uri : Uri)
-            fun carregarBitMap(bitmap: Bitmap )
             fun requisistarPermissao()
             fun abrirGaleria(): ActivityResultLauncher<String>?
             fun abrirCameraOnclik() :ActivityResultLauncher<Intent>?

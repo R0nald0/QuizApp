@@ -120,9 +120,6 @@ class CadastroActivity : AppCompatActivity(),IUsuario.IViewCadastro{
           Picasso.get().load(uri).into(binding.perfilImagem)
      }
 
-    override fun carregarBitMap(bitmap: Bitmap) {
-         binding.perfilImagem.setImageBitmap(bitmap)
-    }
 
 
 }

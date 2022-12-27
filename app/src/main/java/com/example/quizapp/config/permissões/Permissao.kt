@@ -53,5 +53,13 @@ class Permissao{
 
     }
 
+    fun checarPermissao(permissao : Map<String, Boolean>):String {
+        var itemPermisao = ""
+        permissao.keys.forEach {
+            itemPermisao = it
+        }
+        return itemPermisao
+    }
+
 
 }

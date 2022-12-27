@@ -48,7 +48,7 @@ class CadastroPresenter (
     }
 
     override
-      fun carregarImagemPerfil(uri: Uri?){ //TODO revisar imagem perfil
+      fun carregarImagemPerfil(uri: Uri?){
         usuarioBd?.recuperarUriImagen(uri)
           if (uri !=null){
               viewCadastro?.carregarImagemPicasso(uri)
@@ -59,25 +59,29 @@ class CadastroPresenter (
 
 
     override
-     fun verificarPermissao(permissao: Map<String, Boolean>) {
-        val per = permissao.get(Manifest.permission.READ_EXTERNAL_STORAGE)
+     fun verificarPermissao(mapPermissao: Map<String, Boolean>) {
+           val permis =  permissao.checarPermissao(mapPermissao)
 
-        if (per == true){
-         Log.i(Constantes.TAG, "verificarPermissao: ${permissao}")
-         viewCadastro?.exibirToast("permissaoAceita")
-               usuarioBd?.abrirGaleria(viewCadastro?.abrirGaleria())
-          }else{
-              viewCadastro?.exibirToast("permissaoNEgada")
-          }
+        when(permis){
+            Manifest.permission.CAMERA-> {
+                if (mapPermissao[permis] == true){
+                    viewCadastro?.exibirToast("permissaoAceita")
+                    usuarioBd?.abrirCamera(viewCadastro?.abrirCameraOnclik())
+                }
+                else viewCadastro?.exibirToast("Permissao Negada")
+            }
 
-        val perCamera = permissao.get(Manifest.permission.CAMERA)
-        if (perCamera == true){
-            Log.i(Constantes.TAG, "verificarPermissao: ${permissao}")
-            viewCadastro?.exibirToast("permissaoAceita")
-            usuarioBd?.abrirCamera(viewCadastro?.abrirCameraOnclik())
-        }else{
-            viewCadastro?.exibirToast("permissaoNEgada")
+            Manifest.permission.READ_EXTERNAL_STORAGE -> {
+
+                if (mapPermissao[permis] == true){
+                    viewCadastro?.exibirToast("permissaoAceita")
+                    usuarioBd?.abrirGaleria(viewCadastro?.abrirGaleria())
+                }
+                else viewCadastro?.exibirToast("permissao Negada")
+
+            }
         }
+
     }
     override
      fun requisitarPermissao(gerenciadorDePermissoao : ActivityResultLauncher<Array<String>>, permissaoNome:String, activity: Activity){
