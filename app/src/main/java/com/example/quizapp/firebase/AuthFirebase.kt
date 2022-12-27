@@ -27,17 +27,14 @@ class AuthFirebase {
         return false
     }
 
-    fun  cadastrarUsuario(email:String,senha :String){
-             authFirebase.createUserWithEmailAndPassword(
+    suspend fun  cadastrarUsuario(email:String, senha :String):AuthResult{
+           return try {
+                authFirebase.createUserWithEmailAndPassword(
                     email,senha
-                )
-                    .addOnSuccessListener {
-
-
-                    }
-                    .addOnFailureListener {
-
-                    }
+                ).await()
+            }catch (ex :RuntimeException){
+                throw RuntimeException("Erro ao cadastrar usuario")
+            }
 
     }
 

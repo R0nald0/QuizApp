@@ -59,7 +59,6 @@ class CadastroPresenter (
           }
     }
 
-
     override
      fun verificarPermissao(mapPermissao: Map<String, Boolean>) {
            val permis =  permissao.checarPermissao(mapPermissao)
@@ -102,12 +101,6 @@ class CadastroPresenter (
     override
       fun adicionarFotoPorCamera(resultActivity : ActivityResult,context: Context) {
              val uri = recursoFotos.adicionarFotoPorCamera(resultActivity,context)
-
-        if (uri !=null ){
-            viewCadastro?.carregarImagemPicasso(uri)
-        }else{
-            viewCadastro?.exibirToast("Nenhuma foto foi tirada")
-        }
-
+              carregarImagemPerfil(uri)
     }
 }

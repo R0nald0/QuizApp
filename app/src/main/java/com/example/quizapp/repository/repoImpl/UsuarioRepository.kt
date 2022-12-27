@@ -1,47 +1,24 @@
 package com.example.quizapp.repository.repoImpl
-
-import android.Manifest
-import android.app.Activity
-import android.content.Context
-import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
-import android.util.Log
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.ActivityResultLauncher
-import androidx.core.content.ContextCompat
-import androidx.core.content.FileProvider
-import com.example.quizapp.BuildConfig
 import com.example.quizapp.firebase.AuthFirebase
 import com.example.quizapp.firebase.FirebaseDb
 import com.example.quizapp.firebase.FirebaseDocsStorage
 import com.example.quizapp.model.Usuario
 import com.example.quizapp.repository.IUsuarioBD
-import com.example.quizapp.utils.Constantes
-import com.google.firebase.auth.FirebaseAuth
-import kotlinx.coroutines.tasks.await
-import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.FileOutputStream
-import java.io.OutputStream
+
 
 
 class UsuarioRepository(): IUsuarioBD {
-    private val auth =FirebaseAuth.getInstance()
     private val firebaseAuth =AuthFirebase()
     private val db = FirebaseDb()
     private val storage =FirebaseDocsStorage
     private  var uriImage : Uri? =null
 
-    // TODO Remover classe FirebaseAUTH.getInstance
-
      override
       suspend fun cadastrarUsuario(email: String, senha: String, nome:String):Usuario{
            try {
-               val result = auth.createUserWithEmailAndPassword(email,senha).await()
+               val result = firebaseAuth.cadastrarUsuario(email,senha)
                val usuario = Usuario(
                    result.user?.uid.toString(),
                    nome,0,email,
@@ -99,7 +76,7 @@ class UsuarioRepository(): IUsuarioBD {
 
     override
         fun deslogarUsuario() {
-       auth.signOut()
+        firebaseAuth.deslogarUsuario()
     }
 
     override
@@ -125,7 +102,6 @@ class UsuarioRepository(): IUsuarioBD {
 
     override
      suspend fun carregarImagemPerfil(usuario: Usuario):Uri {
-        Log.i(Constantes.TAG, "Imagem uPerfil ${usuario.urlImagemPerfil}")
          return  storage.dowloadImagem(usuario)
     }
 
