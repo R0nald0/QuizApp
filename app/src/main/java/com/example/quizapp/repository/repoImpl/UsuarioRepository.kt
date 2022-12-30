@@ -31,7 +31,6 @@ class UsuarioRepository(): IUsuarioBD {
            }catch (ex:Exception){
                throw Exception(ex.message)
            }
-
     }
 
      override

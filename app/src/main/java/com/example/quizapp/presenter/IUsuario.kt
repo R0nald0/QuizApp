@@ -14,6 +14,11 @@ interface IUsuario{
         fun abrirView()
         fun getToast(mensagem: String)
         fun viewCadastro(view: View)
+        fun  checkErroLogin()
+        fun exibirErroMensager(mensagem: String)
+        fun exibirErroMensagerEmail(mensagem: String)
+        fun esconderErroMensager()
+        fun esconderErroMensagerEmail()
     }
 
         interface IViewCadastro {
