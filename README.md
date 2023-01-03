@@ -7,3 +7,4 @@ Aplicativo desenvolvido ultilizando tecnologias do Firebase como FirebaseAuth,Fi
 - Gerenciamento de permissões
 - Fragments
 - RecyclerView
+- MVP
