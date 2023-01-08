@@ -5,16 +5,15 @@ import com.example.quizapp.presenter.IUsuario
 import com.example.quizapp.repository.IUsuarioBD
 import com.example.quizapp.repository.repoImpl.UsuarioRepository
 import com.example.quizapp.utils.VerificadorConta
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.google.firebase.FirebaseTooManyRequestsException
+import kotlinx.coroutines.*
 
 class LoginPresenter(
     private  var viewLogin :  IUsuario.IViewLogin? = null,
     private  var  usuarioBd : IUsuarioBD?=null
 ) : ILoginPresenter {
      val verificadorConta = VerificadorConta()
+    var job :Job? =null
 
     init {
         usuarioBd = UsuarioRepository()
@@ -40,18 +39,30 @@ class LoginPresenter(
                 }
             }
     }
+
+
     override
     fun logar(email: String, senha: String){
-             CoroutineScope(Dispatchers.IO).launch {
+        viewLogin?.exibirProgressBar()
+        job = CoroutineScope(Dispatchers.IO).launch {
                  try{
                      val resultado = usuarioBd?.logarUsuario(email,senha)
+                         withContext(Dispatchers.Main){
+                             viewLogin?.getToast("Entrando...")
+                             viewLogin?.abrirView()
+                         }
+                 }
+                 catch (ex: FirebaseTooManyRequestsException){
                      withContext(Dispatchers.Main){
-                         viewLogin?.getToast("Entrando...")
+                         viewLogin?.getToast("Muitas tentativas,acesso está temporariamente desativado")
+                         viewLogin?.esconderProgressBar()
                      }
-                     viewLogin?.abrirView()
-                 }catch (ex:RuntimeException){
+                 }
+                 catch (ex:Exception){
                      withContext(Dispatchers.Main){
-                         viewLogin?.getToast("${ex.message.toString()} ")
+                         viewLogin?.getToast("Verifique os campos e preencha corretamente,Email ou Senha inválido")
+                         viewLogin?.esconderProgressBar()
+                         ex.printStackTrace()
                      }
                  }
 
@@ -63,5 +74,9 @@ class LoginPresenter(
     override
     fun verificarUsuarioLogado(){
         if (usuarioBd?.verificarUsuariologdao() == true)viewLogin?.abrirView()
+    }
+
+    override fun onDestroy() {
+        job?.cancel()
     }
 }

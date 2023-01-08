@@ -1,17 +1,11 @@
 package com.example.quizapp.config.permissões
 
-import android.Manifest
+
 import android.app.Activity
 import android.content.pm.PackageManager
-import android.util.Log
-import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.example.quizapp.repository.repoImpl.UsuarioRepository
-import com.example.quizapp.utils.Constantes
-
 
 class Permissao{
 
@@ -40,9 +34,12 @@ class Permissao{
 
     fun pedirPermissao(gerenciadorDePermissoao :  ActivityResultLauncher<Array<String>>,permissao: String,activity: Activity):Boolean{
 
-        val valorPermissao = ContextCompat.checkSelfPermission(activity,permissao) == PackageManager.PERMISSION_DENIED
-              if (valorPermissao && !listaPermissoesNegadas.contains(permissao)) listaPermissoesNegadas.add(permissao)
-        Log.i(Constantes.TAG, "Lista de permissões negadas: ${listaPermissoesNegadas}")
+        val valorPermissao =
+             ContextCompat.checkSelfPermission(activity,permissao) == PackageManager.PERMISSION_DENIED
+
+              if (valorPermissao && !listaPermissoesNegadas.contains(permissao))
+                    listaPermissoesNegadas.add(permissao)
+
         if (listaPermissoesNegadas.isNotEmpty() ) {
              gerenciadorDePermissoao.launch(listaPermissoesNegadas.toTypedArray())
               listaPermissoesNegadas.remove(permissao)
@@ -55,8 +52,8 @@ class Permissao{
 
     fun checarPermissao(permissao : Map<String, Boolean>):String {
         var itemPermisao = ""
-        permissao.keys.forEach {
-            itemPermisao = it
+          permissao.keys.forEach {
+             itemPermisao = it
         }
         return itemPermisao
     }

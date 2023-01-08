@@ -3,7 +3,6 @@ package com.example.quizapp.view
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -12,7 +11,7 @@ import com.example.quizapp.presenter.IUsuario
 import com.example.quizapp.databinding.ActivityLoginBinding
 import com.example.quizapp.presenter.ILoginPresenter
 import com.example.quizapp.presenter.presenterImpl.LoginPresenter
-import com.example.quizapp.utils.Constantes
+import com.google.android.material.snackbar.Snackbar
 
 class LoginActivity : AppCompatActivity(),IUsuario.IViewLogin {
      private val binding by lazy {
@@ -64,17 +63,24 @@ class LoginActivity : AppCompatActivity(),IUsuario.IViewLogin {
         binding.txtInputEmail.isEndIconVisible =true
     }
 
+    override fun exibirProgressBar() {
+        binding.progressBarLogin.visibility=View.VISIBLE
+        binding.idBtnLogin.visibility=View.GONE
+        binding.txtCadastrar.visibility=View.GONE
+    }
+
+    override fun esconderProgressBar() {
+        binding.progressBarLogin.visibility=View.GONE
+        binding.idBtnLogin.visibility=View.VISIBLE
+        binding.txtCadastrar.visibility=View.VISIBLE
+    }
+
     override fun onStart() {
         super.onStart()
         presenterLogin.verificarUsuarioLogado()
     }
 
     override fun logarUsario(view: View) {
-        binding.progressBarLogin.visibility=View.VISIBLE
-        binding.idBtnLogin.visibility=View.GONE
-        binding.txtCadastrar.visibility=View.GONE
-
-
         val email = binding.edtInputEmail.text.toString()
         val senha= binding.edtIntputSenha.text.toString()
         presenterLogin.logar(email, senha)
@@ -87,15 +93,14 @@ class LoginActivity : AppCompatActivity(),IUsuario.IViewLogin {
     }
 
     override fun getToast(mensagem: String) {
-             Toast.makeText(this@LoginActivity, mensagem, Toast.LENGTH_LONG).show()
-        binding.progressBarLogin.visibility=View.GONE
-        binding.idBtnLogin.visibility=View.VISIBLE
-        binding.txtCadastrar.visibility=View.VISIBLE
+        Toast.makeText(this@LoginActivity, mensagem, Toast.LENGTH_LONG).show()
     }
 
     override fun viewCadastro(view: View) {
         val intent = Intent(this@LoginActivity,CadastroActivity::class.java)
         startActivity(intent)
     }
+
+
 
 }

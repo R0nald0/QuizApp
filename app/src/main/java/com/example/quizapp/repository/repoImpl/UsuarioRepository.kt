@@ -1,12 +1,15 @@
 package com.example.quizapp.repository.repoImpl
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import com.example.quizapp.firebase.AuthFirebase
 import com.example.quizapp.firebase.FirebaseDb
 import com.example.quizapp.firebase.FirebaseDocsStorage
 import com.example.quizapp.model.Usuario
 import com.example.quizapp.repository.IUsuarioBD
-
+import com.example.quizapp.utils.Constantes
+import com.google.android.gms.measurement.sdk.R
+import com.google.firebase.auth.AuthResult
 
 
 class UsuarioRepository(): IUsuarioBD {
@@ -34,13 +37,8 @@ class UsuarioRepository(): IUsuarioBD {
     }
 
      override
-       suspend fun logarUsuario(email:String, senha :String): Boolean {
-        try {
-             firebaseAuth.logarUsurio(email,senha)
-            return  true
-        }catch (e:RuntimeException){
-            throw RuntimeException(e.message.toString())
-        }
+       suspend fun logarUsuario(email:String, senha :String): AuthResult {
+         return firebaseAuth.logarUsurio(email,senha)
     }
 
     override
@@ -50,6 +48,7 @@ class UsuarioRepository(): IUsuarioBD {
                val doc =   db.recuperarUsuaarioLogado(user?.uid.toString())
                val dados = doc.data
 
+          Log.i(Constantes.TAG, "recuperarDAdosUsuarioLogado: ${doc.data}")
                val usuario= Usuario(
                        dados?.get("id").toString(),
                        dados?.get("nome").toString(),
@@ -58,10 +57,11 @@ class UsuarioRepository(): IUsuarioBD {
                        dados?.get("senha").toString(),
                        dados?.get("urlImagemPerfil").toString(),
                    )
+          Log.i(Constantes.TAG, "recuperarUsuarioo: ${usuario.nome}")
                    return usuario
 
-           }catch (ex:RuntimeException){
-               throw RuntimeException(ex.message.toString())
+           }catch (ex:Exception){
+               throw Exception(ex.message.toString())
            }
 
     }

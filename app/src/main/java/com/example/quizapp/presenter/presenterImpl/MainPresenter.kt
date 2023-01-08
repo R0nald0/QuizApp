@@ -9,9 +9,11 @@ import kotlinx.coroutines.*
 
 class MainPresenter(private val viewMain : IMain? =null) : IMainPresenter{
     private val usuarioRepository = UsuarioRepository()
+    var job :Job? = null
+
 
     override fun recuperarDadosUsuario() {
-          CoroutineScope(Dispatchers.IO).launch {
+         job =CoroutineScope(Dispatchers.IO).launch {
              try {
                  viewMain?.exibirProgressBar()
                  val usuario = usuarioRepository.recuperarUsuarioLogado()
@@ -20,8 +22,10 @@ class MainPresenter(private val viewMain : IMain? =null) : IMainPresenter{
                       viewMain?.esconderProgressBar()
                   }
 
-             }catch (ex:RuntimeException){
+             }catch (ex:Exception){
                 withContext(Dispatchers.Main){
+                    usuarioRepository.deslogarUsuario()
+                    viewMain?.deslogarUsuario()
                     viewMain?.mostrarMsg(ex.message.toString())
                 }
 
@@ -37,11 +41,22 @@ class MainPresenter(private val viewMain : IMain? =null) : IMainPresenter{
 
     override
      fun iniciarQuiz() {
-      CoroutineScope(Dispatchers.IO).launch {
-          val usuario = usuarioRepository.recuperarUsuarioLogado()
-          viewMain?.iniciarQuiz(usuario)
+        job=CoroutineScope(Dispatchers.IO).launch {
+          try {
+              val usuario = usuarioRepository.recuperarUsuarioLogado()
+              viewMain?.iniciarQuiz(usuario)
+          }catch (ex:Exception){
+              withContext(Dispatchers.Main){
+                  viewMain?.mostrarMsg("Algo deu errado ao logar o usuario")
+                  viewMain?.deslogarUsuario()
+              }
+          }
       }
 
+    }
+
+    override fun onDestroy() {
+       job?.cancel()
     }
 
 }

@@ -1,7 +1,6 @@
 package com.example.quizapp.presenter
 
 import android.content.Intent
-import android.graphics.Bitmap
 import android.net.Uri
 import android.view.View
 import androidx.activity.result.ActivityResultLauncher
@@ -19,6 +18,8 @@ interface IUsuario{
         fun exibirErroMensagerEmail(mensagem: String)
         fun esconderErroMensager()
         fun esconderErroMensagerEmail()
+        fun exibirProgressBar()
+        fun esconderProgressBar()
     }
 
         interface IViewCadastro {

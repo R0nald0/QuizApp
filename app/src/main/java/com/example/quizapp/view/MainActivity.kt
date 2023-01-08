@@ -30,14 +30,15 @@ class MainActivity : AppCompatActivity(), IMain {
         mainPresenter = MainPresenter(this)
         configuraPopUpMenu()
 
+        binding.idBtnIniciar.setOnClickListener {
+            mainPresenter?.iniciarQuiz()
+        }
     }
 
     override fun onStart() {
         super.onStart()
         mainPresenter?.recuperarDadosUsuario()
-        binding.idBtnIniciar.setOnClickListener {
-            mainPresenter?.iniciarQuiz()
-        }
+
     }
      override
      fun iniciarQuiz( usuario: Usuario){
@@ -48,7 +49,6 @@ class MainActivity : AppCompatActivity(), IMain {
      }
 
     override fun esconderProgressBar() {
-
         binding.linearLayout.visibility = View.VISIBLE
         binding.fragmentContainerView.visibility = View.VISIBLE
         binding.progressBar.visibility = View.GONE
@@ -76,7 +76,6 @@ class MainActivity : AppCompatActivity(), IMain {
     override
     fun mostrarMsg(mensagem: String) {
         Toast.makeText(this, mensagem, Toast.LENGTH_LONG).show()
-
     }
 
     override
@@ -113,5 +112,11 @@ class MainActivity : AppCompatActivity(), IMain {
             }
 
         })
+    }
+
+    override fun onDestroy() {
+        mainPresenter?.onDestroy()
+        mainPresenter = null
+        super.onDestroy()
     }
 }
