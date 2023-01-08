@@ -11,6 +11,7 @@
         <item name="boxStrokeWidth">0dp</item>
         <item name="boxStrokeWidthFocused">0dp</item>
     </style>
+
     <style name="CardStyleCustom" parent="Widget.MaterialComponents.CardView">
         <item name="cardCornerRadius">30dp</item>
 

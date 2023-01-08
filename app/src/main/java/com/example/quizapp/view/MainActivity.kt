@@ -103,7 +103,8 @@ class MainActivity : AppCompatActivity(), IMain {
                       true
                   }
                   R.id.iconEdit->{
-                      Toast.makeText(applicationContext, "Editar Perfil", Toast.LENGTH_LONG).show()
+                      val intent = Intent(applicationContext,PerfilActivity::class.java)
+                       startActivity(intent)
                       true
                   }
                   else-> true
