@@ -9,13 +9,14 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.snapshots
 import kotlinx.coroutines.tasks.await
+import kotlin.math.E
 
 
 class FirebaseDb  {
 
        private val firebaseDb = FirebaseFirestore.getInstance()
 
-      suspend fun recuperarPerguntas():QuerySnapshot {
+       suspend fun recuperarPerguntas():QuerySnapshot {
           return try {
                firebaseDb.collection(Constantes.DOC_PERGUNTAS_BD).get().await()
            }catch (ex:RuntimeException){
@@ -31,8 +32,8 @@ class FirebaseDb  {
                   .set(usuario)
                   .await()
               return  true
-          }catch (ex:RuntimeException){
-               throw RuntimeException("${ex.message} -- ${ex.stackTrace}")
+          }catch (ex:Exception){
+               throw Exception("${ex.message} -- ${ex.stackTrace}")
           }
 
     }
@@ -41,7 +42,6 @@ class FirebaseDb  {
         firebaseDb.collection(Constantes.DOC_RANKING_BD)
             .orderBy("pontuacao",Query.Direction.DESCENDING)
             .addSnapshotListener { value, error ->
-                Log.i("INFO_", "Erro: ${error?.stackTrace}")
 
                 val listaDocument =value?.documents
                 if (listaDocument  != null){
@@ -80,5 +80,7 @@ class FirebaseDb  {
                 .get().await()
 
         }
+
+
 
 }

@@ -20,12 +20,13 @@ class UsuarioAdpter(
 
 ) :RecyclerView.Adapter<UsuarioAdpter.UsuarioViewHolder>() {
      var listPontaucao  = mutableListOf<Usuario>()
-    val usuarioRepository = UsuarioRepository()
-
+     val usuarioRepository = UsuarioRepository()
 
     fun carregarLista(list : MutableList<Usuario> ){
-         listPontaucao.addAll(list)
-        notifyDataSetChanged()
+         if (listPontaucao.isEmpty()){
+             listPontaucao.addAll(list)
+             notifyDataSetChanged()
+         }
     }
     inner class UsuarioViewHolder(item :ItemRcViewBinding) : RecyclerView.ViewHolder(item.root){
 

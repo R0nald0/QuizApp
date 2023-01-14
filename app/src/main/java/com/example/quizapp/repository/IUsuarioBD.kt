@@ -18,6 +18,7 @@ interface IUsuarioBD {
      fun verificarUsuariologdao():Boolean
      fun deslogarUsuario()
      fun salvarUsuario(usuario: Usuario)
+    suspend fun salvarPontuacaoUsuario(usuario: Usuario)
      fun convertBundleToUsuario(bundle: Bundle?): Usuario?
      fun recuperarUriImagen(uri: Uri?)
     suspend fun carregarImagemPerfil(usuario: Usuario):Uri

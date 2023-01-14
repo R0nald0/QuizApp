@@ -3,6 +3,8 @@ package com.example.quizapp.view
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.ContactsContract.CommonDataKinds.Contactables
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -16,6 +18,7 @@ import com.example.quizapp.databinding.ActivityMainBinding
 
 import com.example.quizapp.R
 import com.example.quizapp.model.Usuario
+import com.example.quizapp.utils.Constantes
 
 class MainActivity : AppCompatActivity(), IMain {
 
@@ -23,6 +26,8 @@ class MainActivity : AppCompatActivity(), IMain {
       ActivityMainBinding.inflate(layoutInflater)
   }
     private var mainPresenter:MainPresenter? = null
+    private lateinit var usuario: Usuario
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -33,12 +38,12 @@ class MainActivity : AppCompatActivity(), IMain {
         binding.idBtnIniciar.setOnClickListener {
             mainPresenter?.iniciarQuiz()
         }
+
     }
 
     override fun onStart() {
         super.onStart()
         mainPresenter?.recuperarDadosUsuario()
-
     }
      override
      fun iniciarQuiz( usuario: Usuario){
@@ -54,11 +59,13 @@ class MainActivity : AppCompatActivity(), IMain {
         binding.progressBar.visibility = View.GONE
     }
 
+
+
     override fun exibirProgressBar() {
         binding.progressBar.visibility =View.VISIBLE
-
+        binding.fragmentContainerView.visibility = View.GONE
         binding.linearLayout.visibility = View.GONE
-        binding.fragmentContainerView.visibility =View.GONE
+
     }
 
     override
@@ -67,9 +74,10 @@ class MainActivity : AppCompatActivity(), IMain {
     }
 
     override
-    fun addItensView(nome : String) {
+    fun addItensView(usuario: Usuario) {
+        this.usuario = usuario
         binding.apply {
-            txtBemVindo.text ="Olá,${nome.replaceFirstChar { it.uppercase() }},Bem-Vindo "
+            txtBemVindo.text ="Olá,${usuario.nome.replaceFirstChar { it.uppercase() }},Bem-Vindo "
         }
     }
 
@@ -104,6 +112,7 @@ class MainActivity : AppCompatActivity(), IMain {
                   }
                   R.id.iconEdit->{
                       val intent = Intent(applicationContext,PerfilActivity::class.java)
+                       intent.putExtra("usuario",usuario)
                        startActivity(intent)
                       true
                   }

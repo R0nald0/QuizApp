@@ -107,4 +107,5 @@ class ResultadoActivity : AppCompatActivity(),IResultado {
 
           })
     }
+
 }

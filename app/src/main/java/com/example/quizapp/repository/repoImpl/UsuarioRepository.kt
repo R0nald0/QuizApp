@@ -80,9 +80,15 @@ class UsuarioRepository(): IUsuarioBD {
 
     override
        fun salvarUsuario(usuario: Usuario) {
-        db.salvarUsuario(usuario)
+           db.salvarUsuario(usuario)
+     }
+
+    override suspend fun salvarPontuacaoUsuario(usuario: Usuario) {
+          db.salvarPontuacaoUsuario(usuario)
     }
-     override
+
+
+    override
        fun convertBundleToUsuario(bundle: Bundle?): Usuario?{
 
         val usuario = bundle?.getParcelable<Usuario>("usuario")

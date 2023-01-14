@@ -5,7 +5,7 @@ import com.example.quizapp.model.Usuario
 
 interface IMain {
    fun recuperarIntent() : Bundle?
-   fun addItensView(nome :String)
+   fun addItensView(usuario: Usuario)
    fun mostrarMsg(mensagem :String)
    fun deslogarUsuario()
    fun iniciarQuiz(usuario: Usuario)
